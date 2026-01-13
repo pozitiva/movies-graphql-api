@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using movies_graphql_api.Data;
+using movies_graphql_api.Dto;
 using movies_graphql_api.Models;
 
 namespace movies_graphql_api.GraphQL.Queries
 {
     public class FilmQuery
     {
-        public async Task<object> GetAllFilms(
+        public async Task<PagedFilmsResult> GetAllFilms(
             [Service] MoviesContext context,
             int page = 1,
             int pageSize = 10)
@@ -22,13 +23,13 @@ namespace movies_graphql_api.GraphQL.Queries
                 .Take(pageSize)
                 .ToListAsync();
 
-            return new
+            return new PagedFilmsResult
             {
-                page,
-                pageSize,
-                totalCount,
-                totalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
-                data = films
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+                Data = films
             };
         }
 
