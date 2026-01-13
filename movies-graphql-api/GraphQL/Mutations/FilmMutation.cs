@@ -29,7 +29,7 @@ namespace movies_graphql_api.GraphQL.Mutations
 
 
        public async Task<Film?> UpdateFilm(int id, UpdateFilmInput input, [Service] MoviesContext context)
-        {
+       {
             var film = await context.Films.FindAsync(id);
 
             if (film == null)
@@ -42,7 +42,7 @@ namespace movies_graphql_api.GraphQL.Mutations
 
             await context.SaveChangesAsync();
             return film;
-        }
+       }
 
         public async Task<bool> DeleteFilm(int id, [Service] MoviesContext context)
         {

@@ -6,11 +6,30 @@ namespace movies_graphql_api.GraphQL.Queries
 {
     public class FilmQuery
     {
-        public async Task<IEnumerable<Film>> GetAllFilms([Service] MoviesContext context)
+        public async Task<object> GetAllFilms(
+            [Service] MoviesContext context,
+            int page = 1,
+            int pageSize = 10)
         {
-            return await context.Films
+            if (page < 1 || pageSize < 1)
+                throw new GraphQLException("Page and pageSize must be greater than 0.");
+
+            var totalCount = await context.Films.CountAsync();
+
+            var films = await context.Films
                 .OrderBy(f => f.FilmId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            return new
+            {
+                page,
+                pageSize,
+                totalCount,
+                totalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+                data = films
+            };
         }
 
         public async Task<Film?> GetFilmById(int id, [Service] MoviesContext context)
