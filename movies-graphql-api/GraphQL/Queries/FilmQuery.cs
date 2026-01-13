@@ -1,19 +1,22 @@
-﻿using movies_graphql_api.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using movies_graphql_api.Data;
 using movies_graphql_api.Models;
 
 namespace movies_graphql_api.GraphQL.Queries
 {
     public class FilmQuery
     {
-        // 1. Vrati sve filmove
-        public IQueryable<Film> GetFilms([Service] MoviesContext context)
-            => context.Films;
+        public async Task<IEnumerable<Film>> GetAllFilms([Service] MoviesContext context)
+        {
+            return await context.Films
+                .OrderBy(f => f.FilmId)
+                .ToListAsync();
+        }
 
-        // 2. Vrati film po ID-ju
-        public Film? GetFilmById(
-            int id,
-            [Service] MoviesContext context)
-            => context.Films.FirstOrDefault(f => f.FilmId == id);
+        public async Task<Film?> GetFilmById(int id, [Service] MoviesContext context)
+        {
+            return await context.Films.FindAsync(id);
+        }
     }
 }
 

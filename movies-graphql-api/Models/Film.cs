@@ -11,6 +11,7 @@ namespace movies_graphql_api.Models
         public int FilmId { get; set; }
 
         [Column("title")]
+        [Required]
         public string Title { get; set; }
 
         [Column("description")]
@@ -18,6 +19,12 @@ namespace movies_graphql_api.Models
 
         [Column("release_year")]
         public int? ReleaseYear { get; set; }
+
+        [Column("language_id")]
+        public int LanguageId { get; set; }
+
+        [Column("rental_duration")]
+        public int RentalDuration { get; set; }
 
         [Column("rental_rate")]
         public decimal RentalRate { get; set; }
